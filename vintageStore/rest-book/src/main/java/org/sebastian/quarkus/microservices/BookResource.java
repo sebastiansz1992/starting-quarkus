@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
@@ -21,8 +22,11 @@ public class BookResource {
 
     private final Logger logger;
 
+    @RestClient
+    NumberProxy numberProxy;
+
     public BookResource() {
-        logger = Logger.getLogger(BookResource.class.getName());
+        logger = Logger.getLogger(BookResource.class.getName());        
     }
 
     @POST
@@ -35,7 +39,7 @@ public class BookResource {
     public Response createABook(@FormParam("title") String title, @FormParam("author") String author, @FormParam("yearOfPublication") int yearOfPublication, @FormParam("genre") String genre) {
         
         Book book = new Book();
-        book.isbn13 = "13-1978-3-16-148410-0";
+        book.isbn13 = numberProxy.generateIsbNumbers().isbn13;
         book.title = title;
         book.author = author;
         book.yearOfPublication = yearOfPublication;
